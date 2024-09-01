@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Configuration;
 using System.Net;
 using WebApi.Models;
 
@@ -10,18 +11,19 @@ namespace WebApi.Controllers
     public class JobController : ControllerBase
     {
         private readonly ILogger<JobController> _logger;
+        private readonly string? _connectionString;
 
-        public JobController(ILogger<JobController> logger)
+
+        public JobController(ILogger<JobController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _connectionString = configuration.GetConnectionString("OracleDb");
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Job>> Get()
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -51,9 +53,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(string id)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -88,9 +88,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Job job)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -121,9 +119,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(string id, [FromBody] Job job)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -158,9 +154,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {

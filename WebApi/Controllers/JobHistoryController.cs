@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Configuration;
 using System.Net;
 using WebApi.Models;
 
@@ -10,18 +11,19 @@ namespace WebApi.Controllers
     public class JobHistoryController : ControllerBase
     {
         private readonly ILogger<JobHistoryController> _logger;
+        private readonly string? _connectionString;
 
-        public JobHistoryController(ILogger<JobHistoryController> logger)
+
+        public JobHistoryController(ILogger<JobHistoryController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _connectionString = configuration.GetConnectionString("OracleDb");
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<JobHistory>> Get()
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -52,9 +54,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<IEnumerable<JobHistory>> Get(int id, [FromQuery] DateTime? startDate)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -95,9 +95,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] JobHistory jobHistory)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -130,9 +128,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] JobHistory jobHistory)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -172,9 +168,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id, [FromQuery] DateTime startDate)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {

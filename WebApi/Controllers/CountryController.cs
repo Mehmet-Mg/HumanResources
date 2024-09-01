@@ -10,18 +10,18 @@ namespace WebApi.Controllers
     public class CountryController : ControllerBase
     {
         private readonly ILogger<CountryController> _logger;
+        private readonly string? _connectionString;
 
-        public CountryController(ILogger<CountryController> logger)
+        public CountryController(ILogger<CountryController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _connectionString = configuration.GetConnectionString("OracleDb");
         }
 
         [HttpGet(Name = "GetAllCountry")]
         public ActionResult<IEnumerable<Country>> Get()
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using(OracleCommand cmd = con.CreateCommand())
                 {
@@ -50,9 +50,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(string id)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -86,9 +84,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Country country)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -117,9 +113,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(string id, [FromBody] Country country)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
@@ -151,9 +145,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            string conString = "User Id=HR;Password=HR;Data Source=localhost:1521/FREEPDB1";
-
-            using (OracleConnection con = new OracleConnection(conString))
+            using (OracleConnection con = new OracleConnection(_connectionString))
             {
                 using (OracleCommand cmd = con.CreateCommand())
                 {
