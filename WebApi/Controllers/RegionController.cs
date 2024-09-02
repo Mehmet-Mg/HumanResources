@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Oracle.ManagedDataAccess.Client;
-using System.Configuration;
-using System.Net;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -11,155 +9,64 @@ namespace WebApi.Controllers
     public class RegionController : ControllerBase
     {
         private readonly ILogger<RegionController> _logger;
-        private readonly string? _connectionString;
+        private readonly IRegionRepository _regionRepository;
 
-
-        public RegionController(ILogger<RegionController> logger, IConfiguration configuration)
+        public RegionController(ILogger<RegionController> logger, IRegionRepository regionRepository)
         {
             _logger = logger;
-            _connectionString = configuration.GetConnectionString("OracleDb");
+            _regionRepository = regionRepository;
         }
-
 
         [HttpGet]
         public ActionResult<IEnumerable<Region>> Get()
         {
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-                using (OracleCommand cmd = con.CreateCommand())
-                {
-                    con.Open();
+            var regions = _regionRepository.GetAll();
 
-                    cmd.CommandText = "select REGION_ID, REGION_NAME from regions";
-
-                    OracleDataReader reader = cmd.ExecuteReader();
-
-                    List<Region> list = new List<Region>();
-                    while (reader.Read())
-                    {
-                        list.Add(new Region()
-                        {
-                            RegionId = reader.GetInt32(0),
-                            RegionName = reader.IsDBNull(1) ? null : reader.GetString(1),
-                        });
-                    }
-
-                    return Ok(list);
-                }
-            }
+            return Ok(regions);
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<Region> Get(int id)
         {
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-                using (OracleCommand cmd = con.CreateCommand())
-                {
-                    con.Open();
+            var region = _regionRepository.Get(id);
 
-                    cmd.CommandText = "select REGION_ID, REGION_NAME from regions where region_id = :region_id";
+            if (region is not null)
+                return Ok(region);
 
-                    OracleParameter idParam = new OracleParameter("region_id", id);
-                    cmd.Parameters.Add(idParam);
-
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    Region region = null;
-                    while (reader.Read())
-                    {
-                        region = new Region()
-                        {
-                            RegionId = reader.GetInt32(0),
-                            RegionName = reader.IsDBNull(1) ? null : reader.GetString(1),
-                        };
-                    }
-
-                    if (region != null)
-                        return Ok(region);
-
-                    return NotFound();
-                }
-            }
+            return NotFound();
         }
 
         [HttpPost()]
         public IActionResult Post([FromBody] Region region)
         {
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-                using (OracleCommand cmd = con.CreateCommand())
-                {
-                    con.Open();
+            var result = _regionRepository.Add(region);
 
-                    cmd.CommandText = "insert into regions (REGION_ID, REGION_NAME) " +
-                        "values (:region_id, :region_name)";
+            if (result)
+                return Created();
 
-                    OracleParameter idParam = new OracleParameter("region_id", region.RegionId);
-                    cmd.Parameters.Add(idParam);
-                    OracleParameter regionName = new OracleParameter("region_name", region.RegionName);
-                    cmd.Parameters.Add(regionName);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                        return Created();
-
-                    return BadRequest();
-                }
-            }
+            return BadRequest();
         }
 
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] Region region)
         {
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-                using (OracleCommand cmd = con.CreateCommand())
-                {
-                    con.Open();
+            var result = _regionRepository.Update(region);
 
-                    cmd.CommandText = "update regions c " +
-                        "set c.region_id = :region_id," +
-                        "c.region_name = :region_name " +
-                        "where c.region_id = :region_id";
+            if (result)
+                return NoContent();
 
-                    OracleParameter idParam = new OracleParameter("region_id", region.RegionId);
-                    cmd.Parameters.Add(idParam);
-                    OracleParameter regionName = new OracleParameter("region_name", region.RegionName);
-                    cmd.Parameters.Add(regionName);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                        return NoContent();
-
-                    return BadRequest();
-                }
-            }
+            return NotFound();
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            using (OracleConnection con = new OracleConnection(_connectionString))
-            {
-                using (OracleCommand cmd = con.CreateCommand())
-                {
-                    con.Open();
+            var result = _regionRepository.Delete(id);
 
-                    cmd.CommandText = "Delete from regions c where c.region_id = :region_id";
+            if (result)
+                return NoContent();
 
-                    OracleParameter idParam = new OracleParameter("region_id", id);
-                    cmd.Parameters.Add(idParam);
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                        return NoContent();
-
-                    return BadRequest();
-                }
-            }
+            return NotFound();
         }
     }
 }
