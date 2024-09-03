@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class LocationController : ControllerBase
     {
         private readonly ILogger<LocationController> _logger;
-        private readonly ILocationRepository _locationRepository;
+        private readonly IServiceManager _manager;
 
-        public LocationController(ILogger<LocationController> logger, ILocationRepository locationRepository)
+        public LocationController(ILogger<LocationController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _locationRepository = locationRepository;
+            _manager = manager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Location>> Get()
         {
-            var locations = _locationRepository.GetAll();
+            var locations = _manager.LocationService.GetAllLocation();
 
             return Ok(locations);
         }
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<Location> Get(int id)
         {
-            var location = _locationRepository.Get(id);
+            var location = _manager.LocationService.GetLocationById(id);
 
             if (location is not null)
                 return Ok(location);
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Location location)
         {
-            var result = _locationRepository.Add(location);
+            var result = _manager.LocationService.AddLocation(location);
 
             if (result)
                 return Created();
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] Location location)
         {
-            var result = _locationRepository.Update(location);
+            var result = _manager.LocationService.UpdateLocation(location);
 
             if (result)
                 return NoContent();
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            var result = _locationRepository.Delete(id);
+            var result = _manager.LocationService.DeleteLocation(id);
 
             if (result)
                 return NoContent();

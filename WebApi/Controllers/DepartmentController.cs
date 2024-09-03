@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class DepartmentController : ControllerBase
     {
         private readonly ILogger<DepartmentController> _logger;
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IServiceManager _manager;
 
-        public DepartmentController(ILogger<DepartmentController> logger, IDepartmentRepository departmentRepository)
+        public DepartmentController(ILogger<DepartmentController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _departmentRepository = departmentRepository;
+            _manager = manager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Department>> Get()
         {
-            var departments = _departmentRepository.GetAll();
+            var departments = _manager.DepartmentService.GetAllDepartment();
 
             return Ok(departments);
         }
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<Department> Get(int id)
         {
-            var department = _departmentRepository.Get(id);
+            var department = _manager.DepartmentService.GetDepartmentById(id);
 
             if (department is not null)
                 return Ok(department);
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Department department)
         {
-            var result = _departmentRepository.Add(department);
+            var result = _manager.DepartmentService.AddDepartment(department);
 
             if (result)
                 return Created();
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] Department department)
         {
-            var result = _departmentRepository.Update(department);
+            var result = _manager.DepartmentService.UpdateDepartment(department);
 
             if (result)
                 return NoContent();
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            var result = _departmentRepository.Delete(id);
+            var result = _manager.DepartmentService.DeleteDepartment(id);
 
             if (result)
                 return NoContent();

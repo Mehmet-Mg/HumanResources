@@ -1,5 +1,5 @@
-using WebApi.Repositories;
-using WebApi.Repositories.ManagedDataAccess;
+using HumanResources.BLL;
+using HumanResources.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,13 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();
-builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+builder.Services.AddDataAccessLayer();
+builder.Services.AddBusinessLogicLayer();
 
 var app = builder.Build();
 
@@ -26,7 +21,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 

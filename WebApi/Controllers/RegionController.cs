@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class RegionController : ControllerBase
     {
         private readonly ILogger<RegionController> _logger;
-        private readonly IRegionRepository _regionRepository;
+        private readonly IServiceManager _manager;
 
-        public RegionController(ILogger<RegionController> logger, IRegionRepository regionRepository)
+        public RegionController(ILogger<RegionController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _regionRepository = regionRepository;
+            _manager = manager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Region>> Get()
         {
-            var regions = _regionRepository.GetAll();
+            var regions = _manager.RegionService.GetAllRegion();
 
             return Ok(regions);
         }
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<Region> Get(int id)
         {
-            var region = _regionRepository.Get(id);
+            var region = _manager.RegionService.GetRegionById(id);
 
             if (region is not null)
                 return Ok(region);
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Region region)
         {
-            var result = _regionRepository.Add(region);
+            var result = _manager.RegionService.AddRegion(region);
 
             if (result)
                 return Created();
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] Region region)
         {
-            var result = _regionRepository.Update(region);
+            var result = _manager.RegionService.UpdateRegion(region);
 
             if (result)
                 return NoContent();
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            var result = _regionRepository.Delete(id);
+            var result = _manager.RegionService.DeleteRegion(id);
 
             if (result)
                 return NoContent();

@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class JobController : ControllerBase
     {
         private readonly ILogger<JobController> _logger;
-        private readonly IJobRepository _jobRepository;
+        private readonly IServiceManager _manager;
 
-        public JobController(ILogger<JobController> logger, IJobRepository jobRepository)
+        public JobController(ILogger<JobController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _jobRepository = jobRepository;
+            _manager = manager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Job>> Get()
         {
-            var jobs = _jobRepository.GetAll();
+            var jobs = _manager.JobService.GetAllJob();
 
             return Ok(jobs);
         }
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(string id)
         {
-            var job = _jobRepository.Get(id);
+            var job = _manager.JobService.GetJobById(id);
 
             if (job is not null)
                 return Ok(job);
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Job job)
         {
-            var result = _jobRepository.Add(job);
+            var result = _manager.JobService.AddJob(job);
 
             if (result)
                 return Created();
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(string id, [FromBody] Job job)
         {
-            var result = _jobRepository.Update(job);
+            var result = _manager.JobService.UpdateJob(job);
 
             if (result)
                 return NoContent();
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var result = _jobRepository.Delete(id);
+            var result = _manager.JobService.DeleteJob(id);
 
             if (result)
                 return NoContent();

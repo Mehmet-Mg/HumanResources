@@ -1,33 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class EmployeeController : ControllerBase
     {
         private readonly ILogger<EmployeeController> _logger;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IServiceManager _manager;
 
-        public EmployeeController(ILogger<EmployeeController> logger, IEmployeeRepository employeeRepository)
+        public EmployeeController(ILogger<EmployeeController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _employeeRepository = employeeRepository;
+            _manager = manager;
         }
 
         [HttpGet(Name = "GetAllEmployee")]
         public ActionResult<IEnumerable<Employee>> Get()
         {
-            var employees = _employeeRepository.GetAll();
+            var employees = _manager.EmployeeService.GetAllEmployee();
             return Ok(employees);
         }
 
         [HttpGet("{id:int}")]
         public ActionResult<Employee> Get(int id)
         {
-            var employee = _employeeRepository.Get(id);
+            var employee = _manager.EmployeeService.GetEmployeeById(id);
 
             if (employee is null)
                 return NotFound();
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] Employee employee)
         {
-            var result = _employeeRepository.Add(employee);
+            var result = _manager.EmployeeService.AddEmployee(employee);
 
             if (result)
                 return Created();
@@ -49,7 +49,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] Employee employee)
         {
-            var result = _employeeRepository.Update(employee);
+            var result = _manager.EmployeeService.UpdateEmployee(employee);
 
             if (result)
                 return NoContent();
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            var result = _employeeRepository.Delete(id);
+            var result = _manager.EmployeeService.DeleteEmployee(id);
 
             if (result)
                 return NoContent();

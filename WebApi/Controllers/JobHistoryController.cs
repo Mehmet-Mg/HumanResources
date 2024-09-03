@@ -1,26 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
-using WebApi.Repositories;
+﻿using HumanResources.BLL.Services.Contracts;
+using HumanResources.DTO.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace HumanResources.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class JobHistoryController : ControllerBase
     {
         private readonly ILogger<JobHistoryController> _logger;
-        private readonly IJobHistoryRepository _jobHistoryRepository;
+        private readonly IServiceManager _manager;
 
-        public JobHistoryController(ILogger<JobHistoryController> logger, IJobHistoryRepository jobHistoryRepository)
+        public JobHistoryController(ILogger<JobHistoryController> logger, IServiceManager manager)
         {
             _logger = logger;
-            _jobHistoryRepository = jobHistoryRepository;
+            _manager = manager;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<JobHistory>> Get()
         {
-            var histories = _jobHistoryRepository.GetAll();
+            var histories = _manager.JobHistoryService.GetAllJobHistory();
 
             return Ok(histories);
         }
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("{id:int}")]
         public ActionResult<JobHistory> Get(int id, [FromQuery] DateTime startDate)
         {
-            var history = _jobHistoryRepository.Get(id, startDate);
+            var history = _manager.JobHistoryService.GetJobHistoryById(id, startDate);
 
             if (history is not null)
                 return Ok(history);
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [HttpPost()]
         public IActionResult Post([FromBody] JobHistory jobHistory)
         {
-            var result = _jobHistoryRepository.Add(jobHistory);
+            var result = _manager.JobHistoryService.AddJobHistory(jobHistory);
 
             if (result)
                 return Created();
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, [FromBody] JobHistory jobHistory)
         {
-            var result = _jobHistoryRepository.Update(jobHistory);
+            var result = _manager.JobHistoryService.UpdateJobHistory(jobHistory);
 
             if (result)
                 return NoContent();
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult DeleteById(int id)
         {
-            var result = _jobHistoryRepository.Delete(id);
+            var result = _manager.JobHistoryService.DeleteJobHistory(id);
 
             if (result)
                 return NoContent();
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
         [HttpDelete(Name = "DeleteByIdAndStartDate")]
         public IActionResult DeleteByIdAndStartDate([FromQuery] int id, [FromQuery] DateTime startDate)
         {
-            var result = _jobHistoryRepository.Delete(id, startDate);
+            var result = _manager.JobHistoryService.DeleteJobHistory(id, startDate);
 
             if (result)
                 return NoContent();
