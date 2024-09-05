@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanResources.WebApi", "WebApi\HumanResources.WebApi.csproj", "{79F6137F-D0BE-4492-9F19-8EEAFB5B8FB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResources.DTO", "HumanResources.DTO\HumanResources.DTO.csproj", "{AFC85603-3023-49D1-8189-C618BD8E44B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanResources.DTO", "HumanResources.DTO\HumanResources.DTO.csproj", "{AFC85603-3023-49D1-8189-C618BD8E44B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResources.DAL", "HumanResources.DAL\HumanResources.DAL.csproj", "{55171276-6F0D-4018-849E-7F36FA118A83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanResources.DAL", "HumanResources.DAL\HumanResources.DAL.csproj", "{55171276-6F0D-4018-849E-7F36FA118A83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HumanResources.BLL", "HumanResources.BAL\HumanResources.BLL.csproj", "{A3801D8F-0787-445F-85F5-08CD4C2778F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HumanResources.BLL", "HumanResources.BAL\HumanResources.BLL.csproj", "{A3801D8F-0787-445F-85F5-08CD4C2778F8}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "humanresources.webapp.client", "HumanResources.WebApp\humanresources.webapp.client\humanresources.webapp.client.esproj", "{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,12 @@ Global
 		{A3801D8F-0787-445F-85F5-08CD4C2778F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3801D8F-0787-445F-85F5-08CD4C2778F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3801D8F-0787-445F-85F5-08CD4C2778F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CF0CBB0-35CF-434D-BCF5-543DF6E160A8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
