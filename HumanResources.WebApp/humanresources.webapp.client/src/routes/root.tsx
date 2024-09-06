@@ -36,6 +36,18 @@ export default function Root() {
                         <li>
                             <Link to={'/employees'}>Employees</Link>
                         </li>
+                        <li>
+                            <Link to={'/jobs'}>Jobs</Link>
+                        </li>
+                        <li>
+                            <Link to={'/jobHistories'}>Job Histories</Link>
+                        </li>
+                        <li>
+                            <Link to={'/locations'}>Locations</Link>
+                        </li>
+                        <li>
+                            <Link to={'/regions'}>Regions</Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

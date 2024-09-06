@@ -8,6 +8,10 @@ import ErrorPage from './error-page.tsx';
 import Country from './routes/Country.tsx'
 import Department from './routes/Department.tsx';
 import Employee from './routes/Employee.tsx';
+import Job from './routes/Job.tsx';
+import JobHistory from './routes/JobHistory.tsx';
+import Location from './routes/Location.tsx';
+import Region from './routes/Region.tsx';
 
 const router = createBrowserRouter([
     {
@@ -29,19 +33,19 @@ const router = createBrowserRouter([
             },
             {
                 path: "/jobs",
-                element: <Employee />
+                element: <Job />
             },
             {
                 path: "/jobHistories",
-                element: <Employee />
+                element: <JobHistory />
             },
             {
                 path: "/locations",
-                element: <Employee />
+                element: <Location />
             },
             {
                 path: "/regions",
-                element: <Employee />
+                element: <Region />
             }
         ]
     },

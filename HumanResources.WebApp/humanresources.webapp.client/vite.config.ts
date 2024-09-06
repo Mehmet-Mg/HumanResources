@@ -58,7 +58,24 @@ export default defineConfig({
             '^/Employee': { // her biri için ekleme yapmak gerekir mi?
                 target,
                 secure: false
-            }
+            },
+            '^/Job': { // her biri için ekleme yapmak gerekir mi?
+                target,
+                secure: false
+            },
+            '^/JobHistory': { // her biri için ekleme yapmak gerekir mi?
+                target,
+                secure: false
+            },
+            '^/Location': { // her biri için ekleme yapmak gerekir mi?
+                target,
+                secure: false
+            },
+            '^/Region': { // her biri için ekleme yapmak gerekir mi?
+                target,
+                secure: false
+            },
+
         },
         port: 5173,
         https: {
