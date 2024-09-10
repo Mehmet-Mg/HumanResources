@@ -1,4 +1,9 @@
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { ColDef, ModuleRegistry } from '@ag-grid-community/core';
+import { AgGridReact } from '@ag-grid-community/react';
 import { useEffect, useState } from 'react';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 interface IEmployee {
     employeeId: number;
@@ -16,52 +21,37 @@ interface IEmployee {
 
 function Employee() {
     const [employees, setEmployees] = useState<IEmployee[]>();
-
+    const [colDefs, setColDefs] = useState<ColDef<IEmployee>[]>([
+        { field: "employeeId" },
+        { field: "firstName" },
+        { field: "lastName" },
+        { field: "email" },
+        { field: "phoneNumber" },
+        { field: "hireDate" },
+        { field: "jobId" },
+        { field: "salary" },
+        { field: "commissionPercent" },
+        { field: "managerId" },
+        { field: "departmentId" },
+    ]);
     useEffect(() => {
         populateEmployeesData();
     }, []);
 
-    const contents = employees === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Employee Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Hire Date</th>
-                    <th>Job Id</th>
-                    <th>Salary</th>
-                    <th>Commission Percent</th>
-                    <th>Manager Id</th>
-                    <th>Department Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {employees.map(employee =>
-                    <tr key={employee.employeeId}>
-                        <td>{employee.firstName}</td>
-                        <td>{employee.lastName}</td>
-                        <td>{employee.email}</td>
-                        <td>{employee.phoneNumber}</td>
-                        <td>{employee.hireDate}</td>
-                        <td>{employee.jobId}</td>
-                        <td>{employee.salary}</td>
-                        <td>{employee.commissionPercent}</td>
-                        <td>{employee.managerId}</td>
-                        <td>{employee.departmentId}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
         <div>
-            <h1 id="tableLabel">Country Data</h1>
+            <h1 id="tableLabel">Employees</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div
+                className="ag-theme-quartz" // applying the Data Grid theme
+                style={{ height: 650 }} // the Data Grid will fill the size of the parent container
+            >
+                <AgGridReact
+                    rowData={employees}
+                    columnDefs={colDefs}
+                    loading={employees === undefined}
+                />
+            </div>
         </div>
     );
 

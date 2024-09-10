@@ -1,3 +1,5 @@
+import { ColDef } from '@ag-grid-community/core';
+import { AgGridReact } from '@ag-grid-community/react';
 import { useEffect, useState } from 'react';
 
 interface ILocation {
@@ -11,42 +13,32 @@ interface ILocation {
 
 function Location() {
     const [locations, setLocations] = useState<ILocation[]>();
-
+    const [colDefs, setColDefs] = useState<ColDef<ILocation>[]>([
+        { field: "locationId" },
+        { field: "streetAddress" },
+        { field: "postalCode" },
+        { field: "city" },
+        { field: "stateProvince" },
+        { field: "countryId" },
+    ]);
     useEffect(() => {
         populateLocationsData();
     }, []);
 
-    const contents = locations === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Location Id</th>
-                    <th>Street Address</th>
-                    <th>Postal Code</th>
-                    <th>City</th>
-                    <th>State Province</th>
-                    <th>Country Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {locations.map(location =>
-                    <tr key={location.locationId}>
-                        <td>{location.streetAddress}</td>
-                        <td>{location.postalCode}</td>
-                        <td>{location.city}</td>
-                        <td>{location.stateProvince}</td>
-                        <td>{location.countryId}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
         <div>
-            <h1 id="tableLabel">Country Data</h1>
+            <h1 id="tableLabel">Locations</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div
+                className="ag-theme-quartz" // applying the Data Grid theme
+                style={{ height: 650 }} // the Data Grid will fill the size of the parent container
+            >
+                <AgGridReact
+                    rowData={locations}
+                    columnDefs={colDefs}
+                    loading={locations === undefined}
+                />
+            </div>
         </div>
     );
 

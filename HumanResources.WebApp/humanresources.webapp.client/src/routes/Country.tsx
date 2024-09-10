@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+import { ColDef, ModuleRegistry } from '@ag-grid-community/core';
+import { AgGridReact } from '@ag-grid-community/react';
 
 interface ICountry {
     countryId: string;
@@ -6,39 +10,33 @@ interface ICountry {
     regionId?: number;
 }
 
+
 function Country() {
     const [countries, setCountries] = useState<ICountry[]>();
+    const [colDefs, setColDefs] = useState<ColDef<ICountry>[]>([
+        { field: "countryId" },
+        { field: "countryName" },
+        { field: "regionId" },
+    ]);
 
     useEffect(() => {
         populateCountryData();
     }, []);
 
-    const contents = countries === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Country Id</th>
-                    <th>Country Name</th>
-                    <th>Region Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {countries.map(country =>
-                    <tr key={country.countryId}>
-                        <td>{country.countryId}</td>
-                        <td>{country.countryName}</td>
-                        <td>{country.regionId}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
         <div>
             <h1 id="tableLabel">Country Data</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div
+                className="ag-theme-quartz" // applying the Data Grid theme
+                style={{ height: 500 }} // the Data Grid will fill the size of the parent container
+            >
+                <AgGridReact
+                    rowData={countries}
+                    columnDefs={colDefs}
+                    loading={countries === undefined}
+                />
+            </div>
         </div>
     );
 

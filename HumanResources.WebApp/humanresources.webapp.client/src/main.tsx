@@ -13,6 +13,8 @@ import JobHistory from './routes/JobHistory.tsx';
 import Location from './routes/Location.tsx';
 import Region from './routes/Region.tsx';
 
+import './index.css';
+
 const router = createBrowserRouter([
     {
         path: "/",

@@ -1,3 +1,5 @@
+import { ColDef } from '@ag-grid-community/core';
+import { AgGridReact } from '@ag-grid-community/react';
 import { useEffect, useState } from 'react';
 
 interface IDepartment {
@@ -9,39 +11,30 @@ interface IDepartment {
 
 function Department() {
     const [departments, setDepartments] = useState<IDepartment[]>();
-
+    const [colDefs, setColDefs] = useState<ColDef<IDepartment>[]>([
+        { field: "departmentId" },
+        { field: "departmentName" },
+        { field: "managerId" },
+        { field: "locationId" },
+    ]);
     useEffect(() => {
         populateDepartmentsData();
     }, []);
 
-    const contents = departments === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Department Id</th>
-                    <th>Department Name</th>
-                    <th>Manager Id</th>
-                    <th>Location Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {departments.map(department =>
-                    <tr key={department.departmentId}>
-                        <td>{department.departmentId}</td>
-                        <td>{department.departmentName}</td>
-                        <td>{department.managerId}</td>
-                        <td>{department.locationId}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
         <div>
-            <h1 id="tableLabel">Country Data</h1>
+            <h1 id="tableLabel">Departments</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div
+                className="ag-theme-quartz" // applying the Data Grid theme
+                style={{ height: 650 }} // the Data Grid will fill the size of the parent container
+            >
+                <AgGridReact
+                    rowData={departments}
+                    columnDefs={colDefs}
+                    loading={departments === undefined}
+                />
+            </div>
         </div>
     );
 

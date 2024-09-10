@@ -1,3 +1,5 @@
+import { ColDef } from '@ag-grid-community/core';
+import { AgGridReact } from '@ag-grid-community/react';
 import { useEffect, useState } from 'react';
 
 interface IRegion {
@@ -7,34 +9,29 @@ interface IRegion {
 
 function Region() {
     const [regions, setRegions] = useState<IRegion[]>();
-
+    const [colDefs, setColDefs] = useState<ColDef<IRegion>[]>([
+        { field: "regionId" },
+        { field: "regionName" },
+    ]);
     useEffect(() => {
         populateRegionsData();
     }, []);
 
-    const contents = regions === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tableLabel">
-            <thead>
-                <tr>
-                    <th>Region Id</th>
-                    <th>Region Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {regions.map(region =>
-                    <tr key={region.regionId}>
-                        <td>{region.regionName}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
-
     return (
         <div>
-            <h1 id="tableLabel">Region Data</h1>
+            <h1 id="tableLabel">Regions</h1>
             <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <div
+                className="ag-theme-quartz" // applying the Data Grid theme
+                style={{ height: 650 }} // the Data Grid will fill the size of the parent container
+            >
+                <AgGridReact
+
+                    rowData={regions}
+                    columnDefs={colDefs}
+                    loading={regions === undefined}
+                />
+            </div>
         </div>
     );
 
